@@ -44,12 +44,10 @@ class MainActivity : AppCompatActivity() {
             checkAndUpdateRootStatus()
         }
 
-        // 3. Update the 5G button to run the NR_ONLY commands
         btnForce5G.setOnClickListener {
             if (tvRootStatus.text == "Granted") {
                 tvStatus.text = "Status: Forcing 5G (NR Only)..."
 
-                // We use semicolons to run multiple shell commands back-to-back
                 val force5GCommand = "settings put global preferred_network_mode 32; " +
                         "settings put global preferred_network_mode1 32; " +
                         "settings put global preferred_network_mode2 32"
@@ -66,12 +64,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 4. Update the Auto button to run the Global Auto commands
         btnAuto.setOnClickListener {
             if (tvRootStatus.text == "Granted") {
                 tvStatus.text = "Status: Restoring Auto Network..."
 
-                // 33 is the standard integer for NR/LTE/GSM/WCDMA Auto
                 val autoCommand = "settings put global preferred_network_mode 33; " +
                         "settings put global preferred_network_mode1 33; " +
                         "settings put global preferred_network_mode2 33"
