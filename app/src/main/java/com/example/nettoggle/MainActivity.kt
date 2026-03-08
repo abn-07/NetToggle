@@ -44,17 +44,45 @@ class MainActivity : AppCompatActivity() {
             checkAndUpdateRootStatus()
         }
 
+        // 3. Update the 5G button to run the NR_ONLY commands
         btnForce5G.setOnClickListener {
             if (tvRootStatus.text == "Granted") {
-                tvStatus.text = "Status: Executing 5G force command..."
+                tvStatus.text = "Status: Forcing 5G (NR Only)..."
+
+                // We use semicolons to run multiple shell commands back-to-back
+                val force5GCommand = "settings put global preferred_network_mode 32; " +
+                        "settings put global preferred_network_mode1 32; " +
+                        "settings put global preferred_network_mode2 32"
+
+                val success = executeRootCommand(force5GCommand)
+
+                if (success) {
+                    tvStatus.text = "Status: 5G Forced! (Toggle Airplane mode if signal doesn't refresh)"
+                } else {
+                    tvStatus.text = "Status: Failed to execute command."
+                }
             } else {
                 tvStatus.text = "Status: Cannot execute. No root access."
             }
         }
 
+        // 4. Update the Auto button to run the Global Auto commands
         btnAuto.setOnClickListener {
             if (tvRootStatus.text == "Granted") {
-                tvStatus.text = "Status: Executing Auto network command..."
+                tvStatus.text = "Status: Restoring Auto Network..."
+
+                // 33 is the standard integer for NR/LTE/GSM/WCDMA Auto
+                val autoCommand = "settings put global preferred_network_mode 33; " +
+                        "settings put global preferred_network_mode1 33; " +
+                        "settings put global preferred_network_mode2 33"
+
+                val success = executeRootCommand(autoCommand)
+
+                if (success) {
+                    tvStatus.text = "Status: Auto mode restored! (Toggle Airplane mode if needed)"
+                } else {
+                    tvStatus.text = "Status: Failed to execute command."
+                }
             } else {
                 tvStatus.text = "Status: Cannot execute. No root access."
             }
